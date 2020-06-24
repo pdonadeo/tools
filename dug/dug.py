@@ -13,7 +13,7 @@ from subprocess import *
 import codecs
 from functools import cmp_to_key
 
-__version__ = "3.0.3.0"
+__version__ = "3.0.3.1"
 
 # ANSI COLOR SECTION
 
@@ -242,8 +242,7 @@ def download_last(ref_version, dest_fname, update):
         sys.exit(1)
 
     fout = open(dest_fname, "w")
-    utf8 = codecs.getwriter('utf8')
-    utf8(fout).write(script_file)
+    fout.write(script_file)
     fout.close()
     p_ok("File version %s has been saved as %s" %
          (lastest_version, dest_fname))
