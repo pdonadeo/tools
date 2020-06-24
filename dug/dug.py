@@ -13,7 +13,7 @@ from subprocess import *
 import codecs
 from functools import cmp_to_key
 
-__version__ = "3.0.2.1"
+__version__ = "3.0.3.0"
 
 # ANSI COLOR SECTION
 
@@ -486,21 +486,16 @@ def calc_perc(p, b, nmax):
     return u"%s%s%s" % (col, t, reset_color())
 
 
-def bar(p, nmax, beauty):
+def bar(p, nmax):
     # s = u"░▏▎▍▌▋▊▉▉"
-    if beauty:
-        s = u"·▏▎▍▌▋▊▉▉"
-    else:
-        s = u".{[(|)]}*"
+    s = u"·▏▎▍▌▋▊▉▉"
     n = p/100.*nmax
     ni = int(math.floor(n))
     nf = int(math.floor((n - ni)*len(s)))
     if ni == nmax:
         s = s[-1]*nmax
-    elif beauty:
-        s = u"%s%s%s" % (s[-1]*ni, s[nf], s[0]*(nmax-ni-1))
     else:
-        s = "%s%s%s" % (s[-1]*ni, s[nf], s[0]*(nmax-ni-1))
+        s = u"%s%s%s" % (s[-1]*ni, s[nf], s[0]*(nmax-ni-1))
 
     if not options['color'] or options["ncolors"] == ASCII_ONLY:
         return s
@@ -549,20 +544,11 @@ if options['wide']:
         lenbar = 10
 lenbar = int(lenbar)
 
-if options['utf8']:
-    beauty = True if sys.stdout.encoding == "UTF-8" else False
-    if not beauty:
-        utf8 = codecs.getwriter('utf8')
-        sys.stdout = utf8(sys.stdout)
-        beauty = True
-else:
-    beauty = False
-
 
 for k, n, p, b in data:
     p_out(fmt % {'size': ralign(hr(k), 10),
                  'perc': calc_perc(p, b, lenbar),
-                 'bar': bar(b, lenbar, beauty),
+                 'bar': bar(b, lenbar),
                  'name': n.decode('utf-8')
                  })
 p_out(fmt % {'size': ralign(hr(total_k), 10),
